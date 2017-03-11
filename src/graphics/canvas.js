@@ -70,6 +70,14 @@ Crafty.c("Canvas", {
 
     draw: function (ctx, x, y, w, h) {
         if (!this.ready) return;
+        
+        if (arguments.length === 1) {
+            x = this.x;
+            y = this.y;
+            w = this.w;
+            h = this.h;
+            ctx = this._drawContext;
+        }
         if (arguments.length === 4) {
             h = w;
             w = y;

@@ -14,7 +14,6 @@
     'number9': [9, 0]
   });
 
-
   module("Sprite");
 
   test("Change sprite coordinates", function() {
@@ -68,7 +67,10 @@
   module("Sprite animation", {
     setup: function() {
       // Add an animation to the stage
-      spriteAnimation = Crafty.e('2D, DOM, numbers, SpriteAnimation');
+      spriteAnimation = Crafty.e('2D, DOM, numbers, SpriteAnimation')
+        .setImage("animation/numbers.png")
+        .prepareFrames({ width: 64, height: 64, frameNumber: 10 });
+
       spriteAnimation.attr({ x: 10, y: 10 });
       spriteAnimation.reel('count', 200, 0, 0, 10); // 10 frames duration
       spriteAnimation.reel('countSlow', 1200, 0, 0, 10); //60 frames duration

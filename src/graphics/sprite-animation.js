@@ -63,10 +63,13 @@ Crafty.c("SpriteAnimation", {
 
 
     init: function () {
+        this.requires("Spritemap");
+        
         this._reels = {};
     },
 
-    /**@
+    /*
+     * @
      * #.reel
      * @comp SpriteAnimation
      * @kind Method
@@ -120,7 +123,7 @@ Crafty.c("SpriteAnimation", {
      * // This is the same animation definition, but using the alternative method
      * Crafty.e("2D, DOM, SpriteAnimation, PlayerSprite").reel('PlayerRunning', 1000, [[0, 1], [1, 1], [2, 1], [3, 1]]);
      * ~~~
-     */
+
     reel: function (reelId, duration, fromX, fromY, frameCount, rowLength) {
         // @sign public this .reel()
         if (arguments.length === 0)
@@ -189,6 +192,51 @@ Crafty.c("SpriteAnimation", {
 
         this._reels[reelId] = reel;
 
+        return this;
+    },*/
+    
+    /**
+     * @comp SpriteAnimation
+     * @kind Method
+     * 
+     * @param {type} reelId
+     * @param {type} fps
+     * @param {type} frames
+     * @returns {undefined}
+     */
+    addReel: function(reelId, frames, fps) {
+        if(fps === undefined)
+            fps = 30;
+        
+        var reel = {
+            id: reelId,
+            frames: [],
+            currentFrame: 0,
+            defaultLoops: 1
+        };
+        
+        if(frames === undefined) {
+            reel.frames = new Array(this.getFrames().length);
+            
+            for(var i = 0; i < reel.frames.length; i++)
+                reel.frames[i] = i;
+        }
+        else if(typeof frames[0] === "string") {
+            for(var i = 0; i < frames.length; i++) {
+                var index = this.getFrameIndex(frames[i]);
+                reel.frames.push(index);
+            }
+        }
+        else {
+            reel.frames = frames;
+        }
+        
+        var duration = reel.frames.length / fps  * 1000;
+        reel.easing = new Crafty.easing(duration);
+        reel.duration = reel.easing.duration;
+        
+        this._reels[reelId] = reel;
+        
         return this;
     },
 
@@ -424,10 +472,6 @@ Crafty.c("SpriteAnimation", {
         }
     },
 
-
-
-
-
     // Set the current frame and update the displayed sprite
     // The actual progress for the animation must be set seperately.
     _setFrame: function(frameNumber) {
@@ -442,9 +486,9 @@ Crafty.c("SpriteAnimation", {
     // Update the displayed sprite.
     _updateSprite: function() {
         var currentReel = this._currentReel;
+        
         var pos = currentReel.frames[currentReel.currentFrame];
-        this.sprite(pos[0], pos[1]); // .sprite will trigger redraw
-
+        this.setFrame(pos);
     },
 
 

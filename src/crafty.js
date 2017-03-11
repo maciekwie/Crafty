@@ -8,6 +8,7 @@ Crafty.extend(require('./core/scenes'));
 Crafty.storage = require('./core/storage');
 Crafty.c('Delay', require('./core/time'));
 Crafty.c('Tween', require('./core/tween'));
+require('./core/utilities');
 
 require('./core/systems');
 
@@ -39,6 +40,7 @@ require('./graphics/image');
 require('./graphics/particles');
 require('./graphics/sprite-animation');
 require('./graphics/sprite');
+require('./graphics/spritemap');
 require('./graphics/text');
 require('./graphics/viewport');
 

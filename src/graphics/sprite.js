@@ -223,8 +223,8 @@ Crafty.c("Sprite", {
     },
 
     _drawSprite: function(e){
-        var co = e.co,
-                pos = e.pos,
+        var co = this.co,
+                pos = this.pos,
                 context = e.ctx;
 
         if (e.type === "canvas") {
@@ -234,11 +234,12 @@ Crafty.c("Sprite", {
                 co.y, //y position on sprite
                 co.w, //width on sprite
                 co.h, //height on sprite
-                pos._x, //x position on canvas
-                pos._y, //y position on canvas
-                pos._w, //width on canvas
-                pos._h //height on canvas
+                pos.x, //x position on canvas
+                pos.y, //y position on canvas
+                pos.w, //width on canvas
+                pos.h //height on canvas
             );
+    
         } else if (e.type === "DOM") {
             // Get scale (ratio of entity dimensions to sprite's dimensions)
             // If needed, we will scale up the entire sprite sheet, and then modify the position accordingly
@@ -264,6 +265,35 @@ Crafty.c("Sprite", {
             // Write texture coordinates
             e.program.draw(e, this);
         }
+    },
+    
+    /*
+     * 
+     * @param {type} img
+     * @returns {undefined}
+     */
+    setImage: function(url)
+    {
+        this.__padding = [0, 0];
+        this.__padBorder = 0;
+        this.__coord = [0, 0, 0, 0];
+        
+        this.img = Crafty.asset(url);
+        
+        //draw now
+        if (this.img.complete && this.img.width > 0) {
+            this.ready = true;
+            this.trigger("Invalidate");
+        }
+
+        //set the width and height to the sprite size
+        this.w = this.img.width;
+        this.h = this.img.height;
+        this._setupSpriteImage(this._drawLayer);
+        
+        this.co = { x: this.x, y: this.y, w: this.w, h: this.h };
+        
+        return this;
     },
 
     /**@
@@ -366,6 +396,25 @@ Crafty.c("Sprite", {
         this._h = h;
 
         this.trigger("Invalidate", old);
+        return this;
+    },
+    
+    /**
+     * 
+     * @param {type} x
+     * @param {type} y
+     * @param {type} w
+     * @param {type} h
+     * @returns {spriteAnonym$7}
+     */
+    crop_: function (x, y, w, h) {
+        this.co = { x: x, y: y, w: w, h: h };
+        
+        this.pos = { x: this.x, y: this.y, w: w, h:h };
+        
+        this.ready = true;
+        this.trigger("Invalidate");
+        
         return this;
     }
 });

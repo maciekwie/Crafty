@@ -15,3 +15,4 @@ build/webdriver/failed/*
 .idea
 node_modules/
 localStorage/
+/nbproject/private/
